@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Хранители Глаголов: Путь к Ородруину</title>
+    <style>
+        :root {
+            --gold: #dfb76c;
+            --dark-bg: #1a1612;
+            --card-bg: #2c241e;
+            --text-color: #f4ebd0;
+            --green: #4e6e58;
+            --red: #a94442;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .game-container {
+            max-width: 700px;
+            width: 100%;
+            background-color: var(--card-bg);
+            border: 3px solid var(--gold);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: var(--gold);
+            text-align: center;
+            font-size: 28px;
+            margin-top: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 10px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            margin-bottom: 20px;
+            background-color: rgba(0,0,0,0.3);
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(223, 183, 108, 0.3);
+        }
+
+        .hearts {
+            color: #ff4d4d;
+            letter-spacing: 2px;
+        }
+
+        .chapter-title {
+            text-align: center;
+            font-style: italic;
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--gold);
+        }
+
+        .verb-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .situation {
+            line-height: 1.6;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            background-color: #1a1612;
+            border: 2px solid var(--gold);
+            color: var(--text-color);
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 8px var(--gold);
+        }
+
+        button {
+            background-color: var(--gold);
+            color: #1a1612;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #f4ebd0;
+            transform: translateY(-1px);
+        }
+
+        .outcome-box {
+            display: none;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .outcome-success {
+            background-color: rgba(78, 110, 88, 0.3);
+            border: 2px solid var(--green);
+        }
+
+        .outcome-fail {
+            background-color: rgba(169, 68, 66, 0.3);
+            border: 2px solid var(--red);
+        }
+
+        .outcome-box h3 {
+            margin-top: 0;
+            color: var(--gold);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .game-over-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .game-over-screen h2 {
+            color: var(--gold);
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>🧝‍♂️ Хранители Глаголов 💍</h1>
+    
+    <!-- Экран ввода имени -->
+    <div id="name-screen">
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 20px; margin-bottom: 15px; color: var(--gold);">📜 Добро пожаловать в приключение!</div>
+            <p style="line-height: 1.6; margin-bottom: 20px;">
+                Хранитель, назови своё имя — и судьба Средиземья окажется в твоих руках.
+                Пройди через все главы, вспомни правильные формы неправильных глаголов
+                и уничтожь Кольцо Всевластия в жерле Ородруина!
+            </p>
+            <div class="input-section">
+                <label for="name-input">Как к тебе обращаться, путник?</label>
+                <input type="text" id="name-input" placeholder="Например: Фродо" autocomplete="off" style="text-align: center; font-size: 20px;" onkeydown="if(event.key === 'Enter') startGame()">
+                <button onclick="startGame()" style="font-size: 20px; padding: 14px;">🔰 Начать приключение</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Элементы самой игры -->
+    <div id="game-play" class="hidden">
+        <div class="stats-bar">
+            <div>🧝 <span id="player-name-display">Хранитель</span></div>
+            <div>Карточка: <span id="card-progress">1 / 35</span></div>
+            <div>Здоровье: <span id="hearts-display" class="hearts">❤️❤️❤️</span></div>
+        </div>
+
+        <div id="chapter-name" class="chapter-title">Глава 1: Путешествие начинается</div>
+
+        <div class="card">
+            <div id="verb" class="verb-display">FIND</div>
+            <div id="situation" class="situation">Загрузка приключения...</div>
+        </div>
+
+        <div id="interaction-zone">
+            <div class="input-section">
+                <label for="translation-input">Перевод глагола (на русском):</label>
+                <input type="text" id="translation-input" placeholder="Например: находить" autocomplete="off">
+                
+                <label for="forms-input">Вторая и третья формы (через пробел):</label>
+                <input type="text" id="forms-input" placeholder="Например: found found" autocomplete="off">
+                
+                <button id="submit-btn" onclick="checkAnswer()">Испытать судьбу</button>
+            </div>
+        </div>
+
+        <div id="outcome" class="outcome-box">
+            <h3 id="outcome-title">Исход</h3>
+            <p id="outcome-text">Текст исхода...</p>
+            <p id="correct-answer-reveal" style="font-style: italic; font-size: 15px; margin-top: 15px;"></p>
+            <button id="next-btn" onclick="nextCard()">Продолжить путь</button>
+        </div>
+    </div>
+
+    <!-- Экран завершения или проигрыша -->
+    <div id="game-over" class="game-over-screen hidden">
+        <h2 id="end-title">Конец приключения</h2>
+        <p id="end-desc">Описание</p>
+        <button onclick="restartGame()">Начать заново</button>
+    </div>
+</div>
+
+<script>
+let playerName = "";
+
+const cardsData = [
+    // Глава 1
+    { chapter: "Глава 1: Путешествие начинается (Шир и Бри)", verb: "FIND", translation: ["находить", "найти"], v2: "found", v3: "found", sit: "Вы гуляете по лесу и замечаете в траве странное золотое кольцо.", success: "Вы нашли Кольцо Всевластия! Оно дает вам невидимость, помогая спрятаться от фермера Маггота.", fail: "Вы не замечаете Кольцо. Его подбирает пробегавший мимо орк, и армия Саурона становится сильнее." },
+    { chapter: "Глава 1: Путешествие начинается (Шир и Бри)", verb: "GO", translation: ["идти", "ехать", "отправляться", "пойти"], v2: "went", v3: "gone", sit: "Гэндальф говорит, что оставаться в Шире опасно. Нужно срочно выдвигаться в трактир «Гарцующий пони».", success: "Вы вовремя отправились в путь. Черные всадники (Назгулы) ворвались в ваш дом, но там уже никого не было!", fail: "Вы задержались, чтобы доесть пирог. Назгулы окружили Шир, вам приходится прорываться с боем." },
+    { chapter: "Глава 1: Путешествие начинается (Шир и Бри)", verb: "RUN", translation: ["бежать", "побежать", "убегать"], v2: "ran", v3: "run", sit: "На ночной дороге за вами гонится жуткий Черный Всадник на черном коне!", success: "Вы побежали со всех ног к переправе и успели прыгнуть на паром. Назгул остался на берегу, злобно шипя.", fail: "От страха у вас подкосились ноги. Всадник ранил вас своим мечом, и теперь вам срочно нужна помощь эльфов." },
+    { chapter: "Глава 1: Путешествие начинается (Шир и Бри)", verb: "HIDE", translation: ["прятаться", "спрятаться"], v2: "hid", v3: "hidden", sit: "Вы слышите топот копыт прямо за холмом. Бежать поздно, нужно спрятаться под огромными корнями старого дуба.", success: "Вы спрятались так тихо, что Назгул понюхал воздух прямо над вашей головой, но ничего не заметил и уехал.", fail: "Ваша сумка застряла в ветках, вы зашуршали листьями. Назгул заметил вас и напал!" },
+    { chapter: "Глава 1: Путешествие начинается (Шир и Бри)", verb: "MEET", translation: ["встречать", "встретить"], v2: "met", v3: "met", sit: "В таверне «Гарцующий пони» в темном углу сидит мрачный следопыт в капюшоне по прозвищу Бродяжник.", success: "Вы встретили Арагорна, истинного короля Гондора! Он соглашается стать вашим городником и защитником.", fail: "Вы испугались его вида и убежали спать. Ночью Назгулы пробрались в ваши комнаты и искромсали кровати (вас там не было, но вы жутко напуганы)." },
+    
+    // Глава 2
+    { chapter: "Глава 2: Путь через Ривенделл и Морию", verb: "SEE", translation: ["видеть", "увидеть"], v2: "saw", v3: "seen", sit: "На вершине холма Заверть вы всматриваетесь в ночную даль. Кажется, кто-то приближается.", success: "Вы вовремя увидели приближающихся врагов и успели зажечь факелы для защиты.", fail: "Вы ничего не заметили в темноте. Око Саурона ослепило вас, и враги застали Братство врасплох." },
+    { chapter: "Глава 2: Путь через Ривенделл и Морию", verb: "BRING", translation: ["приносить", "принести"], v2: "brought", v3: "brought", sit: "На совете у эльфов в Ривенделле решается судьба Средиземья. Нужно решить, кто понесет Кольцо.", success: "Вы принесли Кольцо на совет и смело сказали: «Я сделаю это!» Эльфы восхищены вашей храбростью и дарят вам плащ-невидимку.", fail: "Вы испугались ответственности и спрятали Кольцо в карман. Совет погряз в спорах." },
+    { chapter: "Глава 2: Путь через Ривенделл и Морию", verb: "KNOW", translation: ["знать"], v2: "knew", v3: "known", sit: "Братство стоит перед запертыми вратами древней Мории. На дверях написана загадка на эльфийском.", success: "Гэндальф знал разгадку! Он произнес слово «Друг», и огромные каменные двери открылись.", fail: "Никто не вспомнил перевод. Пока вы думали, из подземного озера вылезли огромные щупальца Водного Стража и затащили вас внутрь." },
+    { chapter: "Глава 2: Путь через Ривенделл и Морию", verb: "HEAR", translation: ["слышать", "услышать"], v2: "heard", v3: "heard", sit: "В глубоких шахтах Мории хоббит Пиппин случайно уронил скелет в колодец. Раздался страшный грохот.", success: "Вы услышали далекий барабанный бой орков и успели занять оборонительную позицию у дверей гробницы.", fail: "Вы заткнули уши от грохота. Орки и пещерный тролль ворвались в зал совершенно неожиданно!" },
+    { chapter: "Глава 2: Путь через Ривенделл и Морию", verb: "FIGHT", translation: ["сражаться", "бороться", "драться", "подраться"], v2: "fought", v3: "fought", sit: "Огромный пещерный тролль проломил стену и замахнулся каменным молотом на вашего друга.", success: "Вы отважно сразились с монстром! Хоббиты запрыгнули ему на спину, а Леголас поразил его стрелой.", fail: "Вы растерялись. Тролль швырнул Боромира в стену, Братство понесло урон." },
+    { chapter: "Глава 2: Путь через Ривенделл и Морию", verb: "BREAK", translation: ["ломать", "сломать", "разбивать", "разбить"], v2: "broke", v3: "broken", sit: "На мосту Казад-Дум Гэндальф встает на пути огненного демона Балрога. «Ты не пройдешь!»", success: "Гэндальф сломал своим посохом каменный мост. Демон рухнул в бездну!", fail: "Посох не сработало. Демон перешагнул мост, и всему Братству пришлось бросаться врассыпную." },
+    { chapter: "Глава 2: Путь через Ривенделл и Морию", verb: "FALL", translation: ["падать", "упасть"], v2: "fell", v3: "fallen", sit: "Падая в бездну, Балрог успевает зацепить Гэндальфа своим огненным бичом за лодыжку.", success: "Гэндальф упал вниз, но крикнул: «Бегите, глупцы!», дав вам шанс спастись. (Позже он вернется Белым магом!).", fail: "Гэндальф падает, но увлекает за собой еще и Арагорна. Отряд остался без лидеров." },
+
+    // Глава 3
+    { chapter: "Глава 3: Разделение Братства и чары Лориэна", verb: "COME", translation: ["приходить", "прийти", "приезжать"], v2: "came", v3: "come", sit: "Уставшие и опечаленные потерей Гэндальфа, вы заходите в волшебные эльфийские леса Лотлориэна.", success: "Вы пришли в гости к владычице Галадриэль. Она исцелила ваши раны и подарила волшебный эльфийский хлеб — лембас.", fail: "Эльфы посчитали вас шпионами Саурона и заперли в деревянной клетке на целые сутки." },
+    { chapter: "Глава 3: Разделение Братства и чары Лориэна", verb: "GIVE", translation: ["давать", "дать", "подарить"], v2: "gave", v3: "given", sit: "Галадриэль провожает Хранителей в дальнейший путь по реке на лодках.", success: "Она дала Фродо хрустальный флакон со светом вечерней звезды, который может разгонять любую тьму.", fail: "Из-за недопонимания эльфы дали вам только дырявые весла. Плыть по реке становится тяжело." },
+    { chapter: "Глава 3: Разделение Братства и чары Лориэна", verb: "BECOME", translation: ["становиться", "стать"], v2: "became", v3: "become", sit: "На Братство нападает огромный отряд Урук-хаев. Боромир защищает хоббитов до последнего вздоха.", success: "Перед смертью Боромир признает Арагорна своим королем. Арагорн стал истинным лидером и клянется защитить Гондор.", fail: "Боромир погибает в обиде, Арагорн теряет веру в себя и уходит в изгнание." },
+    { chapter: "Глава 3: Разделение Братства и чары Лориэна", verb: "TAKE", translation: ["брать", "взять"], v2: "took", v3: "taken", sit: "Фродо понимает, что Кольцо сводит членов Братства с ума. Он решает идти в Мордор один.", success: "Фродо взял лодку и тихо поплыл на другой берег. Верный Сэм успел прыгнуть к нему в воду.", fail: "Орки захватывают лодки раньше Фродо. Приходится прорываться с боем сквозь чащу." },
+
+    // Глава 4
+    { chapter: "Глава 4: Хроники Двух Крепостей", verb: "CATCH", translation: ["ловить", "поймать"], v2: "caught", v3: "caught", sit: "В ночных скалах Эмин Муйл за Фродо и Сэмом крадется склизкое существо — Голлум.", success: "Хоббиты поймали Голлума на эльфийскую веревку! Он обещает стать их проводником до Черных Врат.", fail: "Голлум проскользнул мимо и украл у вас мешок с едой. Вы голодаете." },
+    { chapter: "Глава 4: Хроники Двух Крепостей", verb: "EAT", translation: ["есть", "съесть", "кушать"], v2: "ate", v3: "eaten", sit: "Голлум отказывается есть эльфийский хлеб лембас. Он идет на болото, чтобы найти себе ужин.", success: "Он съел сырую рыбу и подобрел. Теперь он ведет вас по безопасной тайной тропе через Мертвые Болота.", fail: "Рыба сорвалась с крючка. Злой и голодный Голлум завел вас прямо в трясину." },
+    { chapter: "Глава 4: Хроники Двух Крепостей", verb: "DRINK", translation: ["пить", "выпить"], v2: "drank", v3: "drunk", sit: "Мерри и Пиппин сбежали от орков в таинственный лес Фангорн и встретили живое дерево — Древоборода.", success: "Хоббиты выпили волшебной родниковой воды Энтов и мгновенно выросли на несколько сантиметров!", fail: "Вода оказалась болотной жижей. Хоббиты закашлялись, а Древобород принял их за маленьких орков." },
+    { chapter: "Глава 4: Хроники Двух Крепостей", verb: "SPEAK", translation: ["говорить", "разговаривать", "заговорить"], v2: "spoke", v3: "spoken", sit: "Арагорн, Гэндальф и Гимли приезжают во дворец Рохана. Король Теоден заколдован магом Саруманом.", success: "Гэндальф заговорил громовым голосом и изгнал дух Сарумана из разума короля. Теоден пришел в себя!", fail: "Заклинание не сработало. Стража выгнала Братство из замка." },
+    { chapter: "Глава 4: Хроники Двух Крепостей", verb: "RIDE", translation: ["скакать", "ехать", "ехать верхом", "скакать верхом"], v2: "rode", v3: "ridden", sit: "Крепость Хельмова Падь окружена 10-тысячной армией орков. Наступает рассвет пятого дня.", success: "Гэндальф и всадники Рохана прискакали с вершины холма! Солнечный свет ослепил орков, враг разбит.", fail: "Лошади устали в пути. Подкрепление опоздало, стены крепости разрушены врагом." },
+    { chapter: "Глава 4: Хроники Двух Крепостей", verb: "SING", translation: ["петь", "запеть"], v2: "sang", v3: "sung", sit: "Энты (живые деревья) идут войной на Изенгард — крепость злого мага Сарумана.", success: "Деревья запели свой могучий боевой марш и затопили Изенгард, разрушив плотину.", fail: "Энты запутались в корнях и передумали воевать. Саруман продолжает создавать монстров." },
+    { chapter: "Глава 4: Хроники Двух Крепостей", verb: "BUILD", translation: ["строить", "построить"], v2: "built", v3: "built", sit: "Саурон собирает огромные катапульты и осадные башни для нападения на столицу Гондора — Минас Тирит.", success: "Эльфы помогли людям и построили крепкие оборонительные катапульты на стенах города.", fail: "Защитные сооружения построены плохо. Первые же камни врага пробивают бреши в стенах." },
+
+    // Глава 5
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "SAY", translation: ["сказать", "говорить"], v2: "said", v3: "said", sit: "Чтобы спасти Гондор, Арагорн должен спуститься в жуткую Пещеру Мертвецов и призвать армию призраков.", success: "Арагорн сказал: «Исполните свой долг, и я освобожу вас!». Король Мертвых преклонил колено.", fail: "Призраки разозлились на Арагорна и прогнали его из пещеры." },
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "CHOOSE", translation: ["выбирать", "выбрать"], v2: "chose", v3: "chosen", sit: "Голлум обманом заводит Фродо в темную пещеру. Перед Фродо два развилка туннелей.", success: "Фродо выбрал правильный верхний путь и успел выбежать на свет до того, как его почуял монстр.", fail: "Фродо пошел в нижний туннель и уперся в тупик из липкой паутины." },
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "FORGET", translation: ["забывать", "забыть"], v2: "forgot", v3: "forgotten", sit: "В глубине пещеры на Фродо нападает гигантская паучиха Шелоб. Нужно срочно вспомнить про подарок Галадриэль.", success: "Фродо не забыл про эльфийский флакон! Он зажег его, ослепил паучиху и ранил её мечом.", fail: "Фродо забыл про флакон. Шелоб ужалила его своим ядом, Сэм бросается на помощь." },
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "WRITE", translation: ["писать", "написать"], v2: "wrote", v3: "written", sit: "Король Теоден собирает войска. Нужно отправить письма во все уголки Рохана с призывом на войну.", success: "Писари быстро написали послания, и 6000 всадников собрались на бой за Минас Тирит.", fail: "Закончились чернила. Письма не отправлены, Гондор остался без помощи союзников." },
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "THINK", translation: ["думать", "подумать"], v2: "thought", v3: "thought", sit: "На короля нападает ужасный Король-Чародей. Он кричит: «Ни один смертный муж не может убить меня!»", success: "Храбрая принцесса Эовин быстро подумала, сняла шлем и крикнула: «Я не муж!», после чего сразила злодея.", fail: "Все испугались пророчества и отступили. Враг теснит людей на этом фланге." },
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "READ", translation: ["читать", "прочитать"], v2: "read", v3: "read", sit: "Пиппин находит в архивах Минас Тирита старый свиток о зажигании сигнальных огней на вершинах гор.", success: "Хоббит прочитал инструкцию и тайно зажег первый костер. Огни побежали по горам — Гондор зовет союзников!", fail: "Свиток сгорел в факеле до того, как его изучили. Огни не зажжены." },
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "LOSE", translation: ["терять", "потерять"], v2: "lost", v3: "lost", sit: "Фродо и Сэм ползут по каменистой пустыне Мордора. Воды нет, силы на исходе.", success: "Хоббиты не потеряли надежду. Сэм берет Фродо на плечи и мужественно тащит вверх по склону горы!", fail: "Фродо потерял сознание от тяжести Кольца. Сэму приходится укрывать его в камнях." },
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "MAKE", translation: ["делать", "создавать", "сделать"], v2: "made", v3: "made", sit: "Вы стоите на краю жерла Роковой Горы. Кольцо шепчет вам, требуя не бросать его в лаву.", success: "Вы вспомнили, что Кольцо было сделано во зле и должно быть уничтожено. Голлум срывается вниз вместе с ним!", fail: "Вы поддались чарам, надели Кольцо. Саурон увидел вас, и Назгулы устремились к вам." },
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "FLY", translation: ["летать", "полететь", "прилететь"], v2: "flew", v3: "flown", sit: "Роковая гора взрывается, лава заливает всё вокруг. Фродо и Сэм застряли на маленьком обломке скалы.", success: "Огромные орлы под предводительством Гэндальфа прилетели сквозь дым и спасли хоббитов!", fail: "Орлы испугались пепла и задержались. Хоббитам пришлось искать укрытие самостоятельно." },
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "WIN", translation: ["побеждать", "победить", "выигрывать", "выиграть"], v2: "won", v3: "won", sit: "Башня Саурона рушится, его Око гаснет навсегда. Тьма рассеивается над Средиземьем.", success: "Светлые силы окончательно победили в этой войне! Все народы празднуют освобождение.", fail: "Саурон успел спасти часть сил и затаился в лесах. Борьба затягивается." },
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "DO", translation: ["делать", "сделать"], v2: "did", v3: "done", sit: "Братство Кольца снова собирается вместе в Ривенделле после великой победы.", success: "Вы сделали великое дело! Хоббиты стали героями легенд, Арагорн коронован, а мир спасен.", fail: "Миссия выполнена лишь частично, впереди еще много нерешенных задач." },
+    { chapter: "Глава 5: Возвращение Короля и Роковая Гора", verb: "SLEEP", translation: ["спать", "поспать"], v2: "slept", v3: "slept", sit: "После всех приключений хоббиты возвращаются в свой тихий, зеленый и безопасный Шир.", success: "Вы наконец-то легли в свои мягкие постели и спали целую неделю без кошмаров. Вы прошли игру!", fail: "В Шире завелись злые разбойники, и вам приходится снова браться за мечи вместо сна." }
+];
+
+let currentCardIndex = 0;
+let lives = 3;
+
+function startGame() {
+    const nameInput = document.getElementById("name-input");
+    playerName = nameInput.value.trim() || "Хранитель";
+
+    document.getElementById("name-screen").classList.add("hidden");
+    document.getElementById("game-play").classList.remove("hidden");
+    updateUI();
+}
+
+function updateUI() {
+    if (currentCardIndex >= cardsData.length) {
+        endGame(true);
+        return;
+    }
+
+    const currentCard = cardsData[currentCardIndex];
+    document.getElementById("player-name-display").innerText = playerName;
+    document.getElementById("card-progress").innerText = `${currentCardIndex + 1} / ${cardsData.length}`;
+    document.getElementById("chapter-name").innerText = currentCard.chapter;
+    document.getElementById("verb").innerText = currentCard.verb;
+    document.getElementById("situation").innerText = currentCard.sit;
+
+    let heartsHtml = "";
+    for(let i=0; i<3; i++) {
+        heartsHtml += i < lives ? "❤️" : "🖤";
+    }
+    document.getElementById("hearts-display").innerHTML = heartsHtml;
+
+    document.getElementById("translation-input").value = "";
+    document.getElementById("forms-input").value = "";
+    
+    document.getElementById("interaction-zone").style.display = "block";
+    document.getElementById("outcome").style.display = "none";
+}
+
+function checkAnswer() {
+    const currentCard = cardsData[currentCardIndex];
+    
+    const userTranslation = document.getElementById("translation-input").value.trim().toLowerCase();
+    const userFormsInput = document.getElementById("forms-input").value.trim().toLowerCase();
+    const userForms = userFormsInput.split(/\s+/);
+
+    const isTranslationCorrect = currentCard.translation.includes(userTranslation);
+    
+    // Check if user provided 2 words for past forms
+    const isV2Correct = userForms[0] === currentCard.v2;
+    const isV3Correct = userForms[1] === currentCard.v3;
+
+    const outcomeBox = document.getElementById("outcome");
+    const outcomeTitle = document.getElementById("outcome-title");
+    const outcomeText = document.getElementById("outcome-text");
+    const revealText = document.getElementById("correct-answer-reveal");
+
+    document.getElementById("interaction-zone").style.display = "none";
+    outcomeBox.style.display = "block";
+
+    if (isTranslationCorrect && isV2Correct && isV3Correct) {
+        outcomeBox.className = "outcome-box outcome-success";
+        outcomeTitle.innerText = "✨ Благоприятный исход!";
+        outcomeText.innerText = currentCard.success;
+        revealText.innerText = `Правильные формы: ${currentCard.verb} — ${currentCard.v2} — ${currentCard.v3}`;
+    } else {
+        lives--;
+        outcomeBox.className = "outcome-box outcome-fail";
+        outcomeTitle.innerText = "💀 Неблагоприятный исход...";
+        outcomeText.innerText = currentCard.fail;
+        
+        let errorMsg = "Где-то ошибка! ";
+        if (!isTranslationCorrect) errorMsg += "Неверный перевод. ";
+        if (!isV2Correct || !isV3Correct) errorMsg += "Ошибка в формах глагола. ";
+        
+        revealText.innerText = `${errorMsg} Правильно: ${currentCard.verb} [${currentCard.translation.join(', ')}] — ${currentCard.v2} — ${currentCard.v3}`;
+
+        if (lives <= 0) {
+            document.getElementById("next-btn").innerText = "Посмотреть судьбу Средиземья";
+        }
+    }
+}
+
+function nextCard() {
+    if (lives <= 0) {
+        endGame(false);
+        return;
+    }
+    currentCardIndex++;
+    updateUI();
+}
+
+function endGame(isWin) {
+    document.getElementById("game-play").classList.add("hidden");
+    const gameOverScreen = document.getElementById("game-over");
+    gameOverScreen.classList.remove("hidden");
+
+    const title = document.getElementById("end-title");
+    const desc = document.getElementById("end-desc");
+
+    if (isWin) {
+        title.innerText = "👑 Победа! Кольцо уничтожено!";
+        desc.innerText = `${playerName}, ты проявил(а) истинную мудрость и отвагу, назвав все формы глаголов верно. Саурон повержен, а ты — официальный Магистр Английской Магии Средиземья!`;
+    } else {
+        title.innerText = "👁️ Тьма поглотила Средиземье...";
+        desc.innerText = `${playerName}, к сожалению, силы иссякли, а Кольцо подчинило себе Хранителей. Но Гэндальф говорит, что время еще есть — повтори свиток заклинаний и попробуй снова!`;
+    }
+}
+
+function restartGame() {
+    currentCardIndex = 0;
+    lives = 3;
+    playerName = "";
+
+    document.getElementById("game-over").classList.add("hidden");
+    document.getElementById("name-screen").classList.remove("hidden");
+    document.getElementById("game-play").classList.add("hidden");
+    document.getElementById("next-btn").innerText = "Продолжить путь";
+    document.getElementById("name-input").value = "";
+}
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("name-input").focus();
+});
+</script>
+
+</body>
+</html>
