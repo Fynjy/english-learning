@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Хранители Глаголов: Путь к Ородруину</title>
+    <style>
+        :root {
+            --gold: #dfb76c;
+            --dark-bg: #1a1612;
+            --card-bg: #2c241e;
+            --text-color: #f4ebd0;
+            --green: #4e6e58;
+            --red: #a94442;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .game-container {
+            max-width: 700px;
+            width: 100%;
+            background-color: var(--card-bg);
+            border: 3px solid var(--gold);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: var(--gold);
+            text-align: center;
+            font-size: 28px;
+            margin-top: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 10px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            margin-bottom: 20px;
+            background-color: rgba(0,0,0,0.3);
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(223, 183, 108, 0.3);
+        }
+
+        .hearts {
+            color: #ff4d4d;
+            letter-spacing: 2px;
+        }
+
+        .chapter-title {
+            text-align: center;
+            font-style: italic;
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--gold);
+        }
+
+        .verb-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .situation {
+            line-height: 1.6;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            background-color: #1a1612;
+            border: 2px solid var(--gold);
+            color: var(--text-color);
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 8px var(--gold);
+        }
+
+        button {
+            background-color: var(--gold);
+            color: #1a1612;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #f4ebd0;
+            transform: translateY(-1px);
+        }
+
+        .outcome-box {
+            display: none;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .outcome-success {
+            background-color: rgba(78, 110, 88, 0.3);
+            border: 2px solid var(--green);
+        }
+
+        .outcome-fail {
+            background-color: rgba(169, 68, 66, 0.3);
+            border: 2px solid var(--red);
+        }
+
+        .outcome-box h3 {
+            margin-top: 0;
+            color: var(--gold);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .game-over-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .game-over-screen h2 {
+            color: var(--gold);
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>🧝‍♂️ Хранители Глаголов 💍</h1>
+    
+    <!-- Экран ввода имени -->
+    <div id="name-screen">
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 20px; margin-bottom: 15px; color: var(--gold);">📜 Добро пожаловать в приключение!</div>
+            <p style="line-height: 1.6; margin-bottom: 20px;">
+                Хранитель, назови своё имя — и судьба Средиземья окажется в твоих руках.
+                Пройди через все главы, вспомни правильные формы неправильных глаголов
+                и уничтожь Кольцо Всевластия в жерле Ородруина!
+            </p>
+            <div class="input-section">
+                <label for="name-input">Как к тебе обращаться, путник?</label>
+                <input type="text" id="name-input" placeholder="Например: Фродо" autocomplete="off" style="text-align: center; font-size: 20px;" onkeydown="if(event.key === 'Enter') startGame()">
+                <button onclick="startGame()" style="font-size: 20px; padding: 14px;">🔰 Начать приключение</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Элементы самой игры -->
+    <div id="game-play" class="hidden">
+        <div class="stats-bar">
+            <div>🧝 <span id="player-name-display">Хранитель</span></div>
+            <div>Карточка: <span id="card-progress">1 / 35</span></div>
+            <div>Здоровье: <span id="hearts-display" class="hearts">❤️❤️❤️</span></div>
+        </div>
+
+        <div id="chapter-name" class="chapter-title">Глава 1: Путешествие начинается</div>
+
+        <div class="card">
+            <div id="situation" class="situation">Загрузка приключения...</div>
+        </div>
+
+        <div id="interaction-zone">
+            <div class="input-section">
+                <label for="v1-input">Первая форма (V1):</label>
+                <input type="text" id="v1-input" placeholder="Например: find" autocomplete="off">
+                
+                <label for="v2-input">Вторая форма (V2, Past Simple):</label>
+                <input type="text" id="v2-input" placeholder="Например: found" autocomplete="off">
+                
+                <label for="v3-input">Третья форма (V3, Past Participle):</label>
+                <input type="text" id="v3-input" placeholder="Например: found" autocomplete="off">
+                
+                <button id="submit-btn" onclick="checkAnswer()">Испытать судьбу</button>
+            </div>
+        </div>
+
+        <div id="outcome" class="outcome-box">
+            <h3 id="outcome-title">Исход</h3>
+            <p id="outcome-text">Текст исхода...</p>
+            <p id="correct-answer-reveal" style="font-style: italic; font-size: 15px; margin-top: 15px;"></p>
+            <button id="next-btn" onclick="nextCard()">Продолжить путь</button>
+        </div>
+    </div>
+
+    <!-- Экран завершения или проигрыша -->
+    <div id="game-over" class="game-over-screen hidden">
+        <h2 id="end-title">Конец приключения</h2>
+        <p id="end-desc">Описание</p>
+        <button onclick="restartGame()">Начать заново</button>
+    </div>
+</div>
+
+<script>
+let playerName = "";
+
+const cardsData = CARDS_DATA;
+let currentCardIndex = 0;
+let lives = 3;
+
+function startGame() {
+    const nameInput = document.getElementById("name-input");
+    playerName = nameInput.value.trim() || "Хранитель";
+
+    document.getElementById("name-screen").classList.add("hidden");
+    document.getElementById("game-play").classList.remove("hidden");
+    updateUI();
+}
+
+function updateUI() {
+    if (currentCardIndex >= cardsData.length) {
+        endGame(true);
+        return;
+    }
+
+    const currentCard = cardsData[currentCardIndex];
+    document.getElementById("player-name-display").innerText = playerName;
+    document.getElementById("card-progress").innerText = `${currentCardIndex + 1} / ${cardsData.length}`;
+    document.getElementById("chapter-name").innerText = currentCard.chapter;
+    document.getElementById("situation").innerText = currentCard.sit;
+
+    let heartsHtml = "";
+    for(let i=0; i<3; i++) {
+        heartsHtml += i < lives ? "❤️" : "🖤";
+    }
+    document.getElementById("hearts-display").innerHTML = heartsHtml;
+
+    document.getElementById("v1-input").value = "";
+    document.getElementById("v2-input").value = "";
+    document.getElementById("v3-input").value = "";
+    
+    document.getElementById("interaction-zone").style.display = "block";
+    document.getElementById("outcome").style.display = "none";
+}
+
+function checkAnswer() {
+    const currentCard = cardsData[currentCardIndex];
+    
+    const userV1 = document.getElementById("v1-input").value.trim().toLowerCase();
+    const userV2 = document.getElementById("v2-input").value.trim().toLowerCase();
+    const userV3 = document.getElementById("v3-input").value.trim().toLowerCase();
+
+    const isV1Correct = userV1 === currentCard.verb.toLowerCase();
+    const isV2Correct = userV2 === currentCard.v2;
+    const isV3Correct = userV3 === currentCard.v3;
+
+    const outcomeBox = document.getElementById("outcome");
+    const outcomeTitle = document.getElementById("outcome-title");
+    const outcomeText = document.getElementById("outcome-text");
+    const revealText = document.getElementById("correct-answer-reveal");
+
+    document.getElementById("interaction-zone").style.display = "none";
+    outcomeBox.style.display = "block";
+
+    if (isV1Correct && isV2Correct && isV3Correct) {
+        outcomeBox.className = "outcome-box outcome-success";
+        outcomeTitle.innerText = "✨ Благоприятный исход!";
+        outcomeText.innerText = currentCard.success;
+        revealText.innerText = `Все формы верны: ${currentCard.verb} — ${currentCard.v2} — ${currentCard.v3}`;
+    } else {
+        lives--;
+        outcomeBox.className = "outcome-box outcome-fail";
+        outcomeTitle.innerText = "💀 Неблагоприятный исход...";
+        outcomeText.innerText = currentCard.fail;
+        
+        let errorMsg = "Где-то ошибка! ";
+        if (!isV1Correct) errorMsg += "Неверная первая форма (V1). ";
+        if (!isV2Correct) errorMsg += "Неверная вторая форма (V2). ";
+        if (!isV3Correct) errorMsg += "Неверная третья форма (V3). ";
+        
+        revealText.innerText = `${errorMsg}\nПравильные формы: ${currentCard.verb} — ${currentCard.v2} — ${currentCard.v3}`;
+
+        if (lives <= 0) {
+            document.getElementById("next-btn").innerText = "Посмотреть судьбу Средиземья";
+        }
+    }
+}
+
+function nextCard() {
+    if (lives <= 0) {
+        endGame(false);
+        return;
+    }
+    currentCardIndex++;
+    updateUI();
+}
+
+function endGame(isWin) {
+    document.getElementById("game-play").classList.add("hidden");
+    const gameOverScreen = document.getElementById("game-over");
+    gameOverScreen.classList.remove("hidden");
+
+    const title = document.getElementById("end-title");
+    const desc = document.getElementById("end-desc");
+
+    if (isWin) {
+        title.innerText = "👑 Победа! Кольцо уничтожено!";
+        desc.innerText = `${playerName}, ты проявил(а) истинную мудрость и отвагу, назвав все формы глаголов верно. Саурон повержен, а ты — официальный Магистр Английской Магии Средиземья!`;
+    } else {
+        title.innerText = "👁️ Тьма поглотила Средиземье...";
+        desc.innerText = `${playerName}, к сожалению, силы иссякли, а Кольцо подчинило себе Хранителей. Но Гэндальф говорит, что время еще есть — повтори свиток заклинаний и попробуй снова!`;
+    }
+}
+
+function restartGame() {
+    currentCardIndex = 0;
+    lives = 3;
+    playerName = "";
+
+    document.getElementById("game-over").classList.add("hidden");
+    document.getElementById("name-screen").classList.remove("hidden");
+    document.getElementById("game-play").classList.add("hidden");
+    document.getElementById("next-btn").innerText = "Продолжить путь";
+    document.getElementById("name-input").value = "";
+}
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("name-input").focus();
+});
+</script>
+
+</body>
+</html>
