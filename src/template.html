@@ -92,7 +92,20 @@
         .situation {
             line-height: 1.6;
             font-size: 18px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+        }
+
+        .sit-hint {
+            font-size: 14px;
+            color: var(--gold);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .hl {
+            font-weight: bold;
+            color: #e8b85a;
+            text-shadow: 0 0 6px rgba(232, 184, 90, 0.3);
         }
 
         .input-section {
@@ -209,6 +222,7 @@
 
         <div class="card">
             <div id="situation" class="situation">Загрузка приключения...</div>
+            <div id="sit-hint" class="sit-hint">Выделенное слово — это глагол, который нужно перевести на английский</div>
         </div>
 
         <div id="interaction-zone">
@@ -268,7 +282,7 @@ function updateUI() {
     document.getElementById("player-name-display").innerText = playerName;
     document.getElementById("card-progress").innerText = `${currentCardIndex + 1} / ${cardsData.length}`;
     document.getElementById("chapter-name").innerText = currentCard.chapter;
-    document.getElementById("situation").innerText = currentCard.sit;
+    document.getElementById("situation").innerHTML = currentCard.sit;
 
     let heartsHtml = "";
     for(let i=0; i<3; i++) {
